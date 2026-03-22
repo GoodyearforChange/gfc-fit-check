@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fit Check — Goodyear For Change</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #EAE7E4;
+      --text: #244B5A;
+      --secondary: #4B858E;
+      --accent: #FF5C35;
+      --input-bg: #ffffff;
+      --input-border: #ccc8c3;
+      --font-body: Georgia, 'Times New Roman', serif;
+      --font-heading: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 560px;
+    }
+
+    /* ── Screens ── */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── Landing ── */
+    .landing h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .landing .subhead {
+      font-family: var(--font-heading);
+      font-size: 1.125rem;
+      color: var(--secondary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 24px;
+    }
+
+    .landing .body-text {
+      font-size: 1rem;
+      color: var(--secondary);
+      margin-bottom: 40px;
+      max-width: 440px;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #ffffff;
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 14px 32px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      text-decoration: none;
+    }
+
+    .btn:hover { opacity: 0.88; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--input-border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover { border-color: var(--secondary); }
+
+    /* ── Progress ── */
+    .progress {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 32px;
+    }
+
+    .progress-dot {
+      width: 32px;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--input-border);
+      transition: background 0.3s;
+    }
+
+    .progress-dot.filled { background: var(--accent); }
+
+    .step-label {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--secondary);
+      margin-bottom: 8px;
+    }
+
+    /* ── Form fields ── */
+    .field-group { margin-bottom: 20px; }
+
+    .field-group label {
+      display: block;
+      font-size: 0.875rem;
+      color: var(--secondary);
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 6px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: var(--font-body);
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .question-text {
+      font-size: 1.25rem;
+      font-weight: 400;
+      margin-bottom: 20px;
+      line-height: 1.5;
+      color: var(--text);
+    }
+
+    textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 6px;
+      padding: 14px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: var(--font-body);
+      line-height: 1.6;
+      resize: vertical;
+      min-height: 120px;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .nav-buttons .btn { flex: 1; text-align: center; }
+
+    /* ── Loading ── */
+    .loading-screen {
+      text-align: center;
+      padding: 60px 0;
+    }
+
+    .loading-screen p {
+      font-size: 1.125rem;
+      color: var(--secondary);
+      margin-top: 24px;
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--input-border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Reflection ── */
+    .reflection-text {
+      font-size: 1.125rem;
+      line-height: 1.7;
+      margin-bottom: 40px;
+      border-left: 3px solid var(--accent);
+      padding-left: 20px;
+    }
+
+    .reflection-label {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--secondary);
+      margin-bottom: 16px;
+    }
+
+    .book-btn {
+      display: block;
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    /* ── Error ── */
+    .error-text {
+      color: var(--secondary);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .error-text a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .error-text a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      body { padding: 20px 16px; }
+      .landing h1 { font-size: 2rem; }
+      .question-text { font-size: 1.125rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Screen 0: Landing -->
+    <div id="screen-landing" class="screen active landing">
+      <img src="/goodyear_monogram.png" alt="Goodyear For Change" style="display: block; max-width: 120px; margin: 0 auto 24px;">
+      <h1>Before we talk.</h1>
+      <p class="subhead">Four questions. Two minutes. No pitch.</p>
+      <p class="body-text">The Fit Check is a real conversation, not a sales call. These questions help us both figure out if this is the right fit before we get on the phone.</p>
+      <button class="btn" onclick="showScreen('screen-info')">Let's do this</button>
+    </div>
+
+    <!-- Screen 1: Name + Email -->
+    <div id="screen-info" class="screen">
+      <div class="progress">
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+      <div class="step-label">Before we start</div>
+      <div class="field-group">
+        <label for="firstName">First name</label>
+        <input type="text" id="firstName" autocomplete="given-name" placeholder="Your first name">
+      </div>
+      <div class="field-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" autocomplete="email" placeholder="you@example.com">
+      </div>
+      <div class="nav-buttons">
+        <button class="btn" onclick="startQuestions()">Continue</button>
+      </div>
+    </div>
+
+    <!-- Screens 2-5: Questions -->
+    <div id="screen-q1" class="screen">
+      <div class="progress">
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+      <div class="step-label">Question 1 of 4</div>
+      <p class="question-text">What made you click this link today?</p>
+      <textarea id="a1" placeholder="Be honest. There's no wrong answer."></textarea>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="showScreen('screen-info')">Back</button>
+        <button class="btn" onclick="nextQuestion('screen-q1', 'screen-q2', 'a1')">Next</button>
+      </div>
+    </div>
+
+    <div id="screen-q2" class="screen">
+      <div class="progress">
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+      <div class="step-label">Question 2 of 4</div>
+      <p class="question-text">What's the one thing in your life that keeps not changing, no matter what you try?</p>
+      <textarea id="a2" placeholder="Take your time."></textarea>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="showScreen('screen-q1')">Back</button>
+        <button class="btn" onclick="nextQuestion('screen-q2', 'screen-q3', 'a2')">Next</button>
+      </div>
+    </div>
+
+    <div id="screen-q3" class="screen">
+      <div class="progress">
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot"></div>
+      </div>
+      <div class="step-label">Question 3 of 4</div>
+      <p class="question-text">What would it mean to actually solve it?</p>
+      <textarea id="a3" placeholder="What changes if this changes?"></textarea>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="showScreen('screen-q2')">Back</button>
+        <button class="btn" onclick="nextQuestion('screen-q3', 'screen-q4', 'a3')">Next</button>
+      </div>
+    </div>
+
+    <div id="screen-q4" class="screen">
+      <div class="progress">
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+      </div>
+      <div class="step-label">Question 4 of 4</div>
+      <p class="question-text">What's your honest hesitation about working with a coach?</p>
+      <textarea id="a4" placeholder="No judgment here."></textarea>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="showScreen('screen-q3')">Back</button>
+        <button class="btn" id="submitBtn" onclick="submitAnswers()">Submit</button>
+      </div>
+    </div>
+
+    <!-- Screen 6: Loading -->
+    <div id="screen-loading" class="screen">
+      <div class="loading-screen">
+        <div class="spinner"></div>
+        <p>Reading what you wrote...</p>
+      </div>
+    </div>
+
+    <!-- Screen 7: Reflection -->
+    <div id="screen-reflection" class="screen">
+      <p class="reflection-label">Here's what we heard</p>
+      <div class="reflection-text" id="reflectionText"></div>
+      <a href="https://calendly.com/goodyearforchange/fit-check" target="_blank" rel="noopener" class="btn book-btn">Book Your Fit Check. It's Free.</a>
+    </div>
+
+    <!-- Screen 8: Error -->
+    <div id="screen-error" class="screen">
+      <h1 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px;">Something went wrong.</h1>
+      <p class="error-text">Email <a href="mailto:nik@goodyearforchange.com">nik@goodyearforchange.com</a> and we'll sort it out.</p>
+    </div>
+
+  </div>
+
+  <script>
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function startQuestions() {
+      const name = document.getElementById('firstName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      if (!name) { document.getElementById('firstName').focus(); return; }
+      if (!email || !email.includes('@')) { document.getElementById('email').focus(); return; }
+      showScreen('screen-q1');
+    }
+
+    function nextQuestion(current, next, textareaId) {
+      const val = document.getElementById(textareaId).value.trim();
+      if (!val) { document.getElementById(textareaId).focus(); return; }
+      showScreen(next);
+    }
+
+    async function submitAnswers() {
+      const a4 = document.getElementById('a4').value.trim();
+      if (!a4) { document.getElementById('a4').focus(); return; }
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      showScreen('screen-loading');
+
+      const payload = {
+        firstName: document.getElementById('firstName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        answers: [
+          document.getElementById('a1').value.trim(),
+          document.getElementById('a2').value.trim(),
+          document.getElementById('a3').value.trim(),
+          a4
+        ]
+      };
+
+      try {
+        const res = await fetch('/api/reflect', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error('API error');
+
+        const data = await res.json();
+        document.getElementById('reflectionText').textContent = data.reflection;
+        showScreen('screen-reflection');
+      } catch (err) {
+        showScreen('screen-error');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
